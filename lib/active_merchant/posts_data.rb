@@ -37,6 +37,7 @@ module ActiveMerchant #:nodoc:
     end
 
     def ssl_post(endpoint, data, headers = {})
+      binding.pry
       ssl_request(:post, endpoint, data, headers)
     end
 

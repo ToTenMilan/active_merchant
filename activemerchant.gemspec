@@ -33,4 +33,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency('mocha', '~> 1')
   s.add_development_dependency('thor')
   s.add_development_dependency('pry')
+  s.add_development_dependency('pry-byebug')
 end

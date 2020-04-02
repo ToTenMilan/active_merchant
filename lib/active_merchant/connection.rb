@@ -91,6 +91,7 @@ module ActiveMerchant
                 http.get(endpoint.request_uri, headers)
               when :post
                 debug body
+                binding.pry
                 http.post(endpoint.request_uri, body, RUBY_184_POST_HEADERS.merge(headers))
               when :put
                 debug body

@@ -774,6 +774,14 @@ payscout:
   username: demo
   password: password
 
+payu:
+  pos_id:
+  second_key:
+  client_id:
+  client_secret:
+
+# Working credentials, no need to replace
+
 # There are all kind of special options that must be set on a test account, and
 # PayU is not transparent about what they are. At this point you need to tell
 # them specifically that the account will be used with Spreedly, which should

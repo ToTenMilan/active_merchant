@@ -38,6 +38,7 @@ module ActiveMerchant #:nodoc:
       def purchase(amount, payment_method, options={})
         post = {}
         auth_or_sale(post, 'AUTHORIZATION_AND_CAPTURE', amount, payment_method, options)
+        binding.pry
         commit('purchase', post)
       end
 
@@ -325,8 +326,9 @@ module ActiveMerchant #:nodoc:
         post[:creditCardToken] = credit_card_token
       end
 
-      def commit(action, params)
+      def commit(action, params) # post => params
         raw_response = ssl_post(url, post_data(params), headers)
+        binding.pry
         response = parse(raw_response)
       rescue ResponseError => e
         raw_response = e.response.body
@@ -344,6 +346,54 @@ module ActiveMerchant #:nodoc:
           test: test?
         )
       end
+
+    #  {:test=>true,
+    #   :language=>"en",
+    #   :command=>"SUBMIT_TRANSACTION",
+    #   :merchant=>{
+    #     :apiLogin=>"api_login",
+    #     :apiKey=>"api_key"},
+    #   :transaction=>
+    #     {:paymentCountry=>"AR",
+    #     :type=>"AUTHORIZATION_AND_CAPTURE",
+    #     :ipAddress=>"127.0.0.1",
+    #     :userAgent=>"Mozilla/5.0 (Windows NT 5.1; rv:18.0) Gecko/20100101 Firefox/18.0",
+    #     :cookie=>"pt1t38347bs6jc9ruv2ecpv7o2",
+    #     :deviceSessionId=>"vghs6tvkcle931686k1900o6e1",
+    #     :order=>
+    #       {:accountId=>"account_id",
+    #       :referenceCode=>"e41240decd399aa62ed8822775503381",
+    #       :description=>"Active Merchant Transaction",
+    #       :language=>"en",
+    #       :buyer=>{
+    #         :fullName=>"APPROVED",
+    #         :dniNumber=>"5415668464654",
+    #         :dniType=>"TI",
+    #         :merchantBuyerId=>"1",
+    #         :emailAddress=>"username@domain.com",
+    #         :contactPhone=>"7563126"},
+    #       :additionalValues=>{
+    #         :TX_VALUE=>{
+    #           :value=>"40.00",
+    #           :currency=>"ARS"}},
+    #       :signature=>"61d456485395e28bce30d02b84fe0d9c"},
+    #     :creditCard=>{
+    #       :number=>"4097440000000004",
+    #       :securityCode=>"444",
+    #       :expirationDate=>"2021/09",
+    #       :name=>"APPROVED"},
+    #     :paymentMethod=>"VISA",
+    #     :payer=>
+    #       {:fullName=>"APPROVED",
+    #       :contactPhone=>"7563126",
+    #       :dniNumber=>"5415668464654",
+    #       :dniType=>"TI",
+    #       :emailAddress=>"username@domain.com",
+    #       :billingAddress=>{
+    #         :street1=>"Viamonte", :street2=>"1366", :city=>"Plata", :state=>"Buenos Aires", :country=>"AR", :phone=>"7563126"}},
+    #     :extraParameters=>{
+    #       :INSTALLMENTS_NUMBER=>1}}}
+
 
       def headers
         {
