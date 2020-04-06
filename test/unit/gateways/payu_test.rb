@@ -3,14 +3,41 @@ require 'test_helper'
 class PayuTest < Test::Unit::TestCase
   def setup
   ########################### CHANGE BEFORE PUSH ###################
-    @gateway = PayuGateway.new(client_id: '', client_secret: '')
+    @gateway = PayuGateway.new(merchant_pos_id: '382705', second_key: 'de5c5d9c49b981ae827528ef34ed8034', client_id: '382705', client_secret: 'ac1c82652fe0eac71e091e1070b84d4a')
     @credit_card = credit_card('4444333322221111', verification_value: '123', first_name: 'APPROVED', last_name: '')
     @amount = 100
 
     @options = {
-      order_id: generate_unique_id,
-      billing_address: address,
-      description: 'Store Purchase'
+      # Required
+      customer_ip: '127.0.0.1',
+      # order_id: generate_unique_id,
+      # billing_address: address,
+      description: 'Store Purchase',
+      currency_code: 'PLN',
+      total_amount: '21000',
+      products: [
+        {
+          name: 'Wireless Mouse for Laptop',
+          unit_price: '15000',
+          quantity: '1'
+        },
+        {
+          name: "HDMI cable",
+          unit_price: "6000",
+          quantity: "1"
+        }
+      ],
+      # strongly recommended
+      buyer: {
+        email: "john.doe@example.com",
+        phone: "654111654",
+        first_name: "John",
+        last_name: "Doe",
+        language: "en"
+      },
+      # optional
+      notify_url: 'www.example.com/notify',
+      ext_order_id: 'www.example.com/order123'
     }
   end
 

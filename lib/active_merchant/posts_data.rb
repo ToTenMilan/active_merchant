@@ -37,7 +37,7 @@ module ActiveMerchant #:nodoc:
     end
 
     def ssl_post(endpoint, data, headers = {})
-      binding.pry
+      # binding.pry
       ssl_request(:post, endpoint, data, headers)
     end
 
@@ -71,7 +71,7 @@ module ActiveMerchant #:nodoc:
 
       connection.proxy_address = proxy_address
       connection.proxy_port    = proxy_port
-
+      binding.pry
       connection.request(method, data, headers)
     end
 

@@ -42,6 +42,7 @@ class PayuLatamTest < Test::Unit::TestCase
   end
 
   def test_successful_purchase
+    # real ssl_post is not touched, thats why headers and data are passed as Hash, and not fails
     @gateway.expects(:ssl_post).returns(successful_purchase_response)
 
     response = @gateway.purchase(@amount, @credit_card, @options)
