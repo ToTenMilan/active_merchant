@@ -71,7 +71,7 @@ module ActiveMerchant #:nodoc:
 
       connection.proxy_address = proxy_address
       connection.proxy_port    = proxy_port
-      binding.pry
+      # binding.pry
       connection.request(method, data, headers)
     end
 

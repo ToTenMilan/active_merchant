@@ -66,7 +66,7 @@ module ActiveMerchant #:nodoc:
         # add_invoice(post, money, params)
         post[:description] = params[:description]
         post[:currencyCode] = params[:currency_code]
-        post[:total_amount] = params[:total_amount]
+        post[:totalAmount] = params[:total_amount]
         # binding.pry
         post[:products] = params[:products].map do |position|
           position.transform_keys { |k| k.to_s.camelize(:lower).to_sym }
@@ -80,15 +80,20 @@ module ActiveMerchant #:nodoc:
         post[:buyer] = params[:buyer].transform_keys { |k| k.to_s.camelize(:lower).to_sym }
         post[:invoiceDisabled] = true if test?
         # binding.pry
+
+        post[:payMethods] = {}
+        post[:payMethods][:payMethod] = params[:pay_methods][:pay_method].transform_keys {
+          |k| k.to_s.camelize(:lower).to_sym
+        }
         commit('sale', post)
       end
 
       def authorize(money, payment, params={})
-        post = {}
-        add_invoice(post, money, params)
-        add_payment(post, payment)
-        add_address(post, payment, params)
-        add_customer_data(post, params)
+        # post = {}
+        # add_invoice(post, money, params)
+        # add_payment(post, payment)
+        # add_address(post, payment, params)
+        # add_customer_data(post, params)
 
         commit('authonly', post)
       end
@@ -157,16 +162,32 @@ module ActiveMerchant #:nodoc:
         data = post_data(action, params)
         response = parse(ssl_post(endpoint, data, headers(auth_hash)))
 
-        Response.new(
-          success_from(response),
-          message_from(response),
-          response,
-          authorization: authorization_from(response),
-          avs_result: AVSResult.new(code: response["some_avs_response_key"]),
-          cvv_result: CVVResult.new(response["some_cvv_response_key"]),
-          test: test?,
-          error_code: error_code_from(response)
-        )
+        # response.body => "{\"status\":{\"statusCode\":\"SUCCESS\"},
+        # \"redirectUri\":\"https://merch-prod.snd.payu.com/info/?orderId=35JM8PGH1L200408GUEST000P01&token=eyJhbGciOiJIUzI1NiJ9.eyJvcmRlcklkIjoiMzVKTThQR0gxTDIwMDQwOEdVRVNUMDAwUDAxIiwicG9zSWQiOiJPSWEwbmR0ciIsImF1dGhvcml0aWVzIjpbIlJPTEVfQ0xJRU5UIl0sInBheWVyRW1haWwiOiJqb2huLmRvZUBleGFtcGxlLmNvbSIsImV4cCI6MTU4NjQzMzMyMiwiaXNzIjoiUEFZVSIsImF1ZCI6ImFwaS1nYXRld2F5Iiwic3ViIjoiUGF5VSBzdWJqZWN0IiwianRpIjoiYWJjZmUxZWUtYWY2Yi00NGYyLTk4NGMtMzdmNzI1MDVkZTIyIn0.avvnMksSWDt9mVbPltx-Ap1_GtjvW5v515DpwMVQnQQ&lang=en\",\"orderId\":\"35JM8PGH1L200408GUEST000P01\"}"
+        binding.pry
+        # Response.new(
+        #   success_from(response),
+        #   message_from(response),
+        #   response,
+        #   test: test?,
+        #   error_code: error_code_from(response)
+        # )
+        # binding.pry
+      #   wrap_response(response)
+      rescue ResponseError => e
+        binding.pry
+        if e.response.code == "302"
+          # wrap_response(e.response)
+          Response.new(
+            success_from(e.response),
+            message_from(e.response),
+            # response,
+            test: test?,
+            error_code: error_code_from(e.response)
+          )
+        else
+          raise ResponseError.new(e.response)
+        end
       end
 
       def headers(auth_hash)
@@ -176,10 +197,24 @@ module ActiveMerchant #:nodoc:
         }
       end
 
+      def wrap_response(response)
+        Response.new(
+          success_from(response),
+          message_from(response),
+          response,
+          test: test?,
+          error_code: error_code_from(response)
+        )
+      end
+
       def success_from(response)
+        (200..302).cover?(response.code.to_i)
       end
 
       def message_from(response)
+        response = JSON.parse(response.body).with_indifferent_access
+        binding.pry
+        response[:status][:statusCode]
       end
 
       def authorization_from(response)
@@ -193,8 +228,7 @@ module ActiveMerchant #:nodoc:
 
       def post_data(action, params = {})
         # binding.pry
-        params.merge(sandbox: test?).to_json
-        # params.to_json
+        JSON.generate(params.merge(sandbox: test?))
       end
 
       def error_code_from(response)

@@ -775,10 +775,10 @@ payscout:
   password: password
 
 payu:
-  pos_id:
-  second_key:
-  client_id:
-  client_secret:
+  merchant_pos_id: 300746
+  second_key: b6ca15b0d1020e8094d9b5f8d163db54
+  client_id: 300746
+  client_secret: 2ee86a66e5d97e3fadc400c9f19b065d
 
 # Working credentials, no need to replace
 
@@ -1200,6 +1200,11 @@ swipe_checkout:
 telr:
   merchant_id: 16715
   api_key: WZV7W#gbMVw^kSBk
+
+# Working credentials, no need to replace
+template_gateway:
+  some_credential: SOMECREDENTIAL
+  another_credential: ANOTHERCREDENTIAL
 
 tns:
   userid: TESTSPREEDLY01
