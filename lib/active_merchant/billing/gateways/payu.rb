@@ -164,7 +164,7 @@ module ActiveMerchant #:nodoc:
 
         # response.body => "{\"status\":{\"statusCode\":\"SUCCESS\"},
         # \"redirectUri\":\"https://merch-prod.snd.payu.com/info/?orderId=35JM8PGH1L200408GUEST000P01&token=eyJhbGciOiJIUzI1NiJ9.eyJvcmRlcklkIjoiMzVKTThQR0gxTDIwMDQwOEdVRVNUMDAwUDAxIiwicG9zSWQiOiJPSWEwbmR0ciIsImF1dGhvcml0aWVzIjpbIlJPTEVfQ0xJRU5UIl0sInBheWVyRW1haWwiOiJqb2huLmRvZUBleGFtcGxlLmNvbSIsImV4cCI6MTU4NjQzMzMyMiwiaXNzIjoiUEFZVSIsImF1ZCI6ImFwaS1nYXRld2F5Iiwic3ViIjoiUGF5VSBzdWJqZWN0IiwianRpIjoiYWJjZmUxZWUtYWY2Yi00NGYyLTk4NGMtMzdmNzI1MDVkZTIyIn0.avvnMksSWDt9mVbPltx-Ap1_GtjvW5v515DpwMVQnQQ&lang=en\",\"orderId\":\"35JM8PGH1L200408GUEST000P01\"}"
-        binding.pry
+        # binding.pry
         # Response.new(
         #   success_from(response),
         #   message_from(response),
@@ -175,7 +175,7 @@ module ActiveMerchant #:nodoc:
         # binding.pry
       #   wrap_response(response)
       rescue ResponseError => e
-        binding.pry
+        # binding.pry
         if e.response.code == "302"
           # wrap_response(e.response)
           Response.new(
@@ -213,7 +213,7 @@ module ActiveMerchant #:nodoc:
 
       def message_from(response)
         response = JSON.parse(response.body).with_indifferent_access
-        binding.pry
+        # binding.pry
         response[:status][:statusCode]
       end
 
